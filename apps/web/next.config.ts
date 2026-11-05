@@ -1,6 +1,4 @@
-import { withSentryConfig } from "@sentry/nextjs/config";
 import type { NextConfig } from "next";
-import { parseSourceMapUpload } from "./src/env/build";
 
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
@@ -20,17 +18,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-const upload = parseSourceMapUpload({
-  SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
-  SENTRY_ORG: process.env.SENTRY_ORG,
-  SENTRY_PROJECT: process.env.SENTRY_PROJECT,
-});
-
-export default withSentryConfig(nextConfig, {
-  silent: process.env.CI === undefined,
-  telemetry: false,
-  widenClientFileUpload: true,
-  ...(upload === null
-    ? { sourcemaps: { disable: true } }
-    : { authToken: upload.authToken, org: upload.org, project: upload.project }),
-});
+export default nextConfig;

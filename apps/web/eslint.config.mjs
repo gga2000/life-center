@@ -24,7 +24,7 @@ export default defineConfig([
     rules: {
       // Errors are handled or shown, never swallowed.
       "no-empty": ["error", { allowEmptyCatch: false }],
-      // Never log: logs can leak health or money data. Use error tracking.
+      // Never log: logs can leak health or money data.
       "no-console": "error",
       // No casting to silence the type checker. `as const` is still allowed.
       "@typescript-eslint/consistent-type-assertions": ["error", { assertionStyle: "never" }],

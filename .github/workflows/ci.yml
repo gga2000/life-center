@@ -76,11 +76,23 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
+          # This job never installs packages, so there is no pnpm store to cache.
+          package-manager-cache: false
 
       - name: Dependency audit (high and critical)
         run: pnpm audit --prod --audit-level high
 
-      - name: Secret scan (full git history)
-        uses: gitleaks/gitleaks-action@v2
+      - name: Install gitleaks (pinned, checksum verified)
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_VERSION: 8.24.3
+          GITLEAKS_SHA256: 9991e0b2903da4c8f6122b5c3186448b927a5da4deef1fe45271c3793f4ee29c
+        run: |
+          archive="gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          curl -sSfL -o "$RUNNER_TEMP/$archive" \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/${archive}"
+          echo "${GITLEAKS_SHA256}  $RUNNER_TEMP/$archive" | sha256sum --check -
+          tar -xzf "$RUNNER_TEMP/$archive" -C "$RUNNER_TEMP" gitleaks
+
+      - name: Secret scan (full git history)
+        run: |
+          "$RUNNER_TEMP/gitleaks" git . --redact --verbose --no-banner

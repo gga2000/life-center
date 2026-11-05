@@ -22,6 +22,7 @@ right the first time".
 | Currency  | Multi-currency accounts, one home currency (IQD) for totals, converted with stored dated rates.                     |
 | App type  | Installable web app (PWA) now. Native maybe later, so domain logic lives in framework-free packages.                |
 | Users     | Just Ali. Still built multi-user safe: every row has an owner and RLS.                                              |
+| Errors    | No third-party error tracking (no Sentry). Server errors are read from Vercel's runtime logs.                       |
 
 ## How to work with Ali
 
@@ -64,10 +65,10 @@ choosing numbers, build in small tested pieces, scored waves to 9+.
 - **Units:** lab values are stored with their unit and the reference range that applied at the time.
   Never show a value without its unit. Conversion is one tested function.
 - **Health data:** private bucket, owner-only, short-lived links. Never sent to logs, analytics or
-  error tracking (see `apps/web/src/lib/observability/scrub-event.ts`). Never diagnose; say so in the UI.
+  any third party. Never diagnose; say so in the UI.
 - No silent data loss. Soft delete with undo where it fits. Every retryable write is idempotent.
 - Audit trail for money and health changes (who, when, old, new).
-- Error messages must not contain user data. They reach error tracking.
+- Error messages must not contain user data. Server errors land in Vercel's runtime logs.
 
 ## Database and migrations
 
@@ -109,8 +110,6 @@ pnpm e2e              # playwright on desktop and phone (run after build)
 
 ```
 apps/web/            Next.js app (App Router, src/ layout)
-  src/env/           Zod-validated environment values (public and build-time)
-  src/lib/           app-level helpers (observability, ...)
   e2e/               Playwright tests
 packages/            shared framework-free packages (money, dates, units, ui) as they arrive
 ```

@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+/*
+ * Placeholder base styles only. The real design system (color, type,
+ * spacing, radius, shadow, motion tokens, light and dark) comes from the
+ * approved design plan.
+ */
+:root {
+  color-scheme: light dark;
+}

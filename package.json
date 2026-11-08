@@ -1,0 +1,21 @@
+{
+  "name": "life-center",
+  "private": true,
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @life-center/web dev",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
+    "build": "pnpm -r build",
+    "e2e": "pnpm -r e2e"
+  },
+  "devDependencies": {
+    "prettier": "3.9.10"
+  }
+}
